@@ -8,7 +8,7 @@ client = anthropic.Anthropic(
     api_key="your-api-key-here",  # Or use os.environ["ANTHROPIC_API_KEY"]
 )
 
-df = pd.read_excel("dataset_curated.xlsx")
+df = pd.read_excel("../data/dataset_curated.xlsx")
 
 completion = []
 for question in df["question"]:
@@ -28,4 +28,4 @@ df_completion = pd.DataFrame()
 df_completion["id"] = range(len(completion))
 df_completion["question"] = df["question"]
 df_completion["completion"] = completion
-df_completion.to_excel("dataset_completion_claude.xlsx", index=False)
+df_completion.to_excel("../data/dataset_completion_claude.xlsx", index=False)
