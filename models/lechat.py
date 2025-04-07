@@ -11,8 +11,7 @@ df = pd.read_excel("../data/dataset_curated.xlsx")
 
 completion = []
 for question in df["question"]:
-    #print(question)
-
+    
     chat_response = client.chat.complete(
     model = model,
     messages = [{"role": "user", "content": question}])
