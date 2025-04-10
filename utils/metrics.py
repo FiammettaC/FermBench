@@ -6,10 +6,7 @@ import torch
 import nltk
 import time
 import pandas as pd
-
-def load_answers(dataset):
-    df = pd.read_excel(f"../data/dataset_completion_{dataset}.xlsx")
-    return df['value'].tolist()
+from data_loading import load_answers
 
 def cosine_similarity(prediction, truth):
     model_sim = SentenceTransformer('sentence-transformers/all-MiniLM-L6-v2')
@@ -73,6 +70,10 @@ answers3 = answers3[:(int(len(answers2)))]
 answers4 = load_answers("lechat")
 answers4 = answers4[:(int(len(answers2)))]
 
+gem_all = load_answers("gemini")
+ds_all = load_answers("deepseek")
+lc_all = load_answers("lechat")
+
 print("Test 1: Gemini vs Gemini")
 final_similarities(answers1, answers2)
 
@@ -84,3 +85,15 @@ final_similarities(answers1, answers4)
 
 print("Test 4: Le Chat vs DeepSeek")
 final_similarities(answers4, answers3)
+
+print("#########################")
+
+
+print("Test 5: Gemini all vs DeepSeek all")
+final_similarities(gem_all, ds_all)
+
+print("Test 6: Le Chat all vs DeepSeek all")
+final_similarities(lc_all, ds_all)
+
+print("Test 7: Le Chat all vs Gemini all")
+final_similarities(lc_all, gem_all)
