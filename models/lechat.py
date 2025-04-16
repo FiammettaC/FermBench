@@ -2,7 +2,7 @@ import os
 from mistralai import Mistral
 import pandas as pd
 import json
-from config_apis import lechat_key
+from apis_config import lechat_key
 
 model = "mistral-large-latest"
 client = Mistral(api_key=lechat_key())

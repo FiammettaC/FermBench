@@ -2,7 +2,7 @@
 from google import genai
 import pandas as pd
 import json
-from config_apis import gemini_key
+from apis_config import gemini_key
 client = genai.Client(api_key=gemini_key())
 
 def load_data(path):
