@@ -2,9 +2,8 @@
 from google import genai
 import pandas as pd
 import json
-
-key = "AIzaSyA4APPbD1Y8IDclX-k9s75awBG2PK1BOxk"
-client = genai.Client(api_key=key)
+from config_apis import gemini_key
+client = genai.Client(api_key=gemini_key())
 
 def load_data(path):
     df = pd.read_excel(path)
@@ -21,5 +20,5 @@ def return_responses(df, dest_path):
 
 # Run code
 data_path = "../data/dataset_curated.xlsx"
-output_path = "../data/dataset_completion_gemini_test.jsonl"
+output_path = "../data/dataset_completion_gemini_rerunX.jsonl"
 return_responses(load_data(data_path), output_path)

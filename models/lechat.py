@@ -2,18 +2,17 @@ import os
 from mistralai import Mistral
 import pandas as pd
 import json
+from config_apis import lechat_key
 
-api_key = "g2zTu5IGITxzDPA9TjSnjSS0GWCjQWjH"
-#api_key = os.environ["MISTRAL_API_KEY"]
 model = "mistral-large-latest"
-client = Mistral(api_key=api_key)
+client = Mistral(api_key=lechat_key())
 
 def load_data(path):
     df = pd.read_excel(path)
     return df
 
 def return_responses(df, dest_path):
-    for question in df["question"]:
+    for question in df["question"].iloc[34:]:
         completion = {}
         chat_response = client.chat.complete(
         model = model,
@@ -25,7 +24,7 @@ def return_responses(df, dest_path):
 
 # Run code
 data_path = "../data/dataset_curated.xlsx"
-output_path = "../data/dataset_completion_lechat.jsonl"
+output_path = "../data/dataset_completion_lechat_rerun1.jsonl"
 return_responses(load_data(data_path), output_path)
 
 
