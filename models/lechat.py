@@ -24,7 +24,7 @@ def return_responses(df, dest_path):
 
 # Run code
 data_path = "../data/dataset_curated.xlsx"
-output_path = "../data/dataset_completion_lechat_rerun1.jsonl"
+output_path = "../data/dataset_completion_lechat_rerun2.jsonl"
 return_responses(load_data(data_path), output_path)
 
 

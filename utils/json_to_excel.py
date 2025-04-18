@@ -16,6 +16,7 @@ def save_excel(data, dest_path):
     df.to_excel(dest_path, index=False)
     return df
 
-jsonl_path = '../data/dataset_completion_gemini_subsample2.jsonl'
-output_path = '../data/dataset_completion_gemini_subsample2.xlsx'
-save_excel(load_data_jsonl(jsonl_path), output_path)
+# Run code
+#jsonl_path = '../data/dataset_completion_gemini_subsample2.jsonl'
+#output_path = '../data/dataset_completion_gemini_subsample2.xlsx'
+#save_excel(load_data_jsonl(jsonl_path), output_path)

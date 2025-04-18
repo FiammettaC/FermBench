@@ -3,6 +3,7 @@ import pandas as pd
 import json
 from apis_config import deepseek_key
 import time
+from tqdm import tqdm
 
 start_time = time.time()
 
@@ -13,7 +14,7 @@ def load_data(path):
     return df
 
 def return_responses(df, dest_path):
-    for question in df["question"]:
+    for question in tqdm(df["question"]):
         completion = {}
         response = client.chat.completions.create(
             model="deepseek-chat",
@@ -27,8 +28,9 @@ def return_responses(df, dest_path):
 
 # Run code
 data_path = "../data/dataset_curated.xlsx"
-output_path = "../data/dataset_completion_deepseek_rerun1.jsonl"
+output_path = "../data/dataset_completion_deepseek_rerun2.jsonl"
 return_responses(load_data(data_path), output_path)
 print("--- %s seconds ---" % (time.time() - start_time))
 
 #--- 4364.234277248383 seconds ---
+#--- 4090.1609075069427 seconds ---

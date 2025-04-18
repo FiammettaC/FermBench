@@ -1,4 +1,3 @@
-
 from google import genai
 import pandas as pd
 import json
@@ -10,7 +9,7 @@ def load_data(path):
     return df
 
 def return_responses(df, dest_path):
-    for question in df["question"]:
+    for question in df["question"].iloc[109:]:
         completion = {}
         response = client.models.generate_content(
             model="gemini-2.0-flash", contents=question)
@@ -19,6 +18,6 @@ def return_responses(df, dest_path):
             f.write(json.dumps([completion]) + '\n')
 
 # Run code
-data_path = "../data/dataset_curated.xlsx"
-output_path = "../data/dataset_completion_gemini_rerunX.jsonl"
-return_responses(load_data(data_path), output_path)
+#data_path = "../data/dataset_curated.xlsx"
+#output_path = "../data/dataset_completion_gemini.jsonl"
+#return_responses(load_data(data_path), output_path)
