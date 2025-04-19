@@ -20,3 +20,15 @@ def save_excel(data, dest_path):
 #jsonl_path = '../data/dataset_completion_gemini_subsample2.jsonl'
 #output_path = '../data/dataset_completion_gemini_subsample2.xlsx'
 #save_excel(load_data_jsonl(jsonl_path), output_path)
+
+def excel_to_jsonl(path, dest_path):
+    df = pd.read_excel(path)
+    for k, v in zip(df['key'], df['value']):
+        d =  {}
+        d[k] = v
+        with open(dest_path, 'a') as f:
+            f.write(json.dumps([d]) + '\n')
+
+data_path = "../data/dataset_completion_lechat.xlsx"
+output_path = "../data/dataset_completion_lechat.jsonl"
+excel_to_jsonl(data_path, output_path) 

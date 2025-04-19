@@ -3,6 +3,7 @@ from mistralai import Mistral
 import pandas as pd
 import json
 from apis_config import lechat_key
+from tqdm import tqdm
 
 model = "mistral-large-latest"
 client = Mistral(api_key=lechat_key())
@@ -12,7 +13,7 @@ def load_data(path):
     return df
 
 def return_responses(df, dest_path):
-    for question in df["question"].iloc[34:]:
+    for question in tqdm(df["question"].iloc[108:]):
         completion = {}
         chat_response = client.chat.complete(
         model = model,
@@ -24,7 +25,5 @@ def return_responses(df, dest_path):
 
 # Run code
 data_path = "../data/dataset_curated.xlsx"
-output_path = "../data/dataset_completion_lechat_rerun2.jsonl"
+output_path = "../data/dataset_completion_lechat.jsonl"
 return_responses(load_data(data_path), output_path)
-
-
