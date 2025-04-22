@@ -15,6 +15,6 @@ def create_question_dataset(path, dest_path):
     return df_questions
 
 # Run code 
-data_path = "../data/questions_database.xlsx"
-output_path = "../data/dataset_curated.xlsx"
-create_question_dataset(data_path, output_path)
+#data_path = "data/questions_database.xlsx"
+#output_path = "data/dataset_curated.xlsx"
+#create_question_dataset(data_path, output_path)
