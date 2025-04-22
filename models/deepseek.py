@@ -27,10 +27,10 @@ def return_responses(df, dest_path):
             f.write(json.dumps([completion]) + '\n')
 
 # Run code
-data_path = "../data/dataset_curated.xlsx"
-output_path = "../data/dataset_completion_deepseek_rerun2.jsonl"
-return_responses(load_data(data_path), output_path)
-print("--- %s seconds ---" % (time.time() - start_time))
+#data_path = "data/dataset_curated.xlsx"
+#output_path = "data/dataset_completion_deepseek_rerun2.jsonl"
+#return_responses(load_data(data_path), output_path)
+#print("--- %s seconds ---" % (time.time() - start_time))
 
 #--- 4364.234277248383 seconds ---
 #--- 4090.1609075069427 seconds ---

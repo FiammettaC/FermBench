@@ -1,6 +1,7 @@
 from google import genai
 import pandas as pd
 import json
+from tqdm import tqdm
 from apis_config import gemini_key
 client = genai.Client(api_key=gemini_key())
 
@@ -9,7 +10,7 @@ def load_data(path):
     return df
 
 def return_responses(df, dest_path):
-    for question in df["question"].iloc[109:]:
+    for question in tqdm(df["question"]):
         completion = {}
         response = client.models.generate_content(
             model="gemini-2.0-flash", contents=question)
@@ -18,6 +19,6 @@ def return_responses(df, dest_path):
             f.write(json.dumps([completion]) + '\n')
 
 # Run code
-#data_path = "../data/dataset_curated.xlsx"
-#output_path = "../data/dataset_completion_gemini.jsonl"
+#data_path = "data/dataset_curated.xlsx"
+#output_path = "data/dataset_completion_gemini.jsonl"
 #return_responses(load_data(data_path), output_path)

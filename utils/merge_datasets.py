@@ -4,8 +4,8 @@ import pandas as pd
 from json_to_excel import load_data_jsonl
 import json
 
-path = "../data/"
-path2 = "../data/dataset_completion"
+path = "data/"
+path2 = "data/dataset_completion"
 
 def merge_responses(path, extention="jsonl"):
     if extention=="jsonl":
@@ -25,7 +25,7 @@ def merge_responses(path, extention="jsonl"):
     data_frames = [answers1, answers2, answers3, answers4, answers5]
     df_merged = reduce(lambda  left,right: pd.merge(left,right,on=['key']), data_frames)
 
-    df_merged.to_excel('../data/dataset_merged_all.xlsx', index=False)
+    df_merged.to_excel('data/dataset_merged_all.xlsx', index=False)
     return df_merged
 
 
@@ -38,13 +38,13 @@ def merge_responses_all(path):
         for rerun in reruns:
             print(rerun)
             try: 
-                answers.append(pd.DataFrame(load_data_jsonl(f'{path}_{model}{rerun}.jsonl')).rename(columns={"value": f"value_{model}{rerun}"}).drop_duplicates(subset='key', keep='first'))
+                answers.append(pd.DataFrame(load_data_jsonl(f'{path}{model}/dataset_completion_{model}{rerun}.jsonl')).rename(columns={"value": f"value_{model}{rerun}"}).drop_duplicates(subset='key', keep='first'))
             except json.decoder.JSONDecodeError:
                 print(model, rerun)
                 continue
     df_merged = reduce(lambda  left,right: pd.merge(left,right,on=['key']), answers)
-    df_merged.to_excel('../data/dataset_merged_all_reruns.xlsx', index=False)
+    df_merged.to_excel('data/dataset_merged_all_reruns2.xlsx', index=False)
     return df_merged
     
-#merge_responses(path, "jsonl")
-merge_responses_all(path)
+#merge_responses(path2, "jsonl")
+#merge_responses_all(path)

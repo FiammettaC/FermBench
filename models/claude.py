@@ -17,7 +17,7 @@ def load_data(path):
 
 def return_responses(df, dest_path):
     
-    for question in tqdm(df["question"].iloc[90:]):
+    for question in tqdm(df["question"]):
         completion = {}
         # Make a simple request
         message = client.messages.create(
@@ -29,6 +29,6 @@ def return_responses(df, dest_path):
             f.write(json.dumps([completion]) + '\n')
 
 # Run code
-data_path = "../data/dataset_curated.xlsx"
-output_path = "../data/dataset_completion_claude_rerun2.jsonl"
-return_responses(load_data(data_path), output_path)
+#data_path = "data/dataset_curated.xlsx"
+#output_path = "data/dataset_completion_claude_rerun2.jsonl"
+#return_responses(load_data(data_path), output_path)

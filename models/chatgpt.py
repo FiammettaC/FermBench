@@ -25,6 +25,6 @@ def return_responses(df, dest_path):
             f.write(json.dumps([completion]) + '\n')
 
 # Run code
-data_path = "../data/dataset_curated.xlsx"
-output_path = "../data/dataset_completion_chatgpt_rerun2.jsonl"
-return_responses(load_data(data_path), output_path)
+#data_path = "data/dataset_curated.xlsx"
+#output_path = "data/dataset_completion_chatgpt_rerun2.jsonl"
+#return_responses(load_data(data_path), output_path)

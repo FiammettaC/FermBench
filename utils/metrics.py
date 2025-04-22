@@ -6,7 +6,7 @@ import torch
 import nltk
 import time
 import pandas as pd
-from data_loading import load_answers
+from data_loading import load_answers, load_data
 
 def cosine_similarity(prediction, truth):
     model_sim = SentenceTransformer('sentence-transformers/all-MiniLM-L6-v2')
@@ -43,67 +43,73 @@ def calculate_metrics(prediction, truth):
     bleu = bleu_score(prediction, truth)
     return similarity, f1_score, bleu
 
-def final_similarities(list_answers1, list_answers2):
-    similarities_list = []
+def pairwise_similarities(list_answers1, list_answers2):
+    cs_list = []
     f1_list = []
     bleu_list = []
     for i, j in zip(list_answers1, list_answers2):
-        #start_time = time.time()
-        similarities, f1_scores, bleu_scores = calculate_metrics(i, j)
-        similarities_list.append(similarities)
+        cos_sim, f1_scores, bleu_scores = calculate_metrics(i, j)
+        cs_list.append(cos_sim)
         f1_list.append(f1_scores)
         bleu_list.append(bleu_scores)
-        #print(f1_scores)
-        #print(similarities)
-        #print(bleu_scores)
-        #print("--- %s seconds ---" % (time.time() - start_time))
 
-    print(np.mean(np.array(similarities_list), axis=0))
-    print(np.mean(np.array(f1_list), axis=0))
-    print(np.mean(np.array(bleu_list), axis=0))
+    avg_cs = np.mean(np.array(cs_list), axis=0)
+    avg_f1 = np.mean(np.array(f1_list), axis=0)
+    avg_bleu = np.mean(np.array(bleu_list), axis=0)
+    
+    #print(avg_cs, avg_f1, avg_bleu)
+    return avg_cs, avg_f1, avg_bleu
+
+def average_similarities(df, model):
+    avg_cs_x, avg_f1_x, avg_bleu_x = pairwise_similarities(df[f"value_{model}"], df[f"value_{model}_rerun1"])
+    avg_cs_y, avg_f1_y, avg_bleu_y = pairwise_similarities(df[f"value_{model}"], df[f"value_{model}_rerun2"])
+    avg_cs_z, avg_f1_z, avg_bleu_z = pairwise_similarities(df[f"value_{model}_rerun1"], df[f"value_{model}_rerun2"])
+    
+    avg_rerun_cs = (avg_cs_x + avg_cs_y + avg_cs_z)/3
+    avg_rerun_f1 = (avg_f1_x + avg_f1_y + avg_f1_z)/3
+    avg_rerun_bleu = (avg_bleu_x + avg_bleu_y + avg_bleu_z)/3
+    
+    print(round(avg_rerun_cs, 3), round(avg_rerun_f1, 3), round(avg_rerun_bleu, 3))
+    return avg_rerun_cs, avg_rerun_f1, avg_rerun_bleu    
+
+def average_similarities_different_models(df):
+    models = ["gemini", "deepseek", "lechat", "chatgpt", "claude"]
+    reruns =  ["", "_rerun1", "_rerun2"]
+    for model1 in models[:-1]:
+        for model2 in models[1:]:
+            avg_cs_x, avg_f1_x, avg_bleu_x = pairwise_similarities(df[f"value_{model1}"], 
+                                                                   df[f"value_{model2}"])
+            avg_cs_y, avg_f1_y, avg_bleu_y = pairwise_similarities(df[f"value_{model1}_rerun1"], 
+                                                                   df[f"value_{model2}_rerun1"])
+            avg_cs_z, avg_f1_z, avg_bleu_z = pairwise_similarities(df[f"value_{model1}_rerun2"], 
+                                                                   df[f"value_{model2}_rerun2"])
+            print(model1, model2)
+            avg_rerun_cs = (avg_cs_x + avg_cs_y + avg_cs_z)/3
+            avg_rerun_f1 = (avg_f1_x + avg_f1_y + avg_f1_z)/3
+            avg_rerun_bleu = (avg_bleu_x + avg_bleu_y + avg_bleu_z)/3
+            
+            print(round(avg_rerun_cs, 2), round(avg_rerun_f1, 2), round(avg_rerun_bleu, 2))
+    return
 
 # Run code
-gem_all = load_answers("gemini")
-gem_all1 = load_answers("gemini_rerun1")
-gem_all2 = load_answers("gemini_rerun2")
-
-ds_all = load_answers("deepseek")
-ds_all1 = load_answers("deepseek_rerun1")
-ds_all2 = load_answers("deepseek_rerun2")
-
-lc_all = load_answers("lechat")
-lc_all1 = load_answers("lechat_rerun1")
-lc_all2 = load_answers("lechat_rerun2")
-
-gpt_all = load_answers("chatgpt")
-gpt_all1 = load_answers("chatgpt_rerun1")
-gpt_all2 = load_answers("chatgpt_rerun2")
-
-cl_all = load_answers("claude")
-cl_all1 = load_answers("claude_rerun1")
-cl_all2 = load_answers("claude_rerun2")
+"""
+df = load_data("data/dataset_merged_all_reruns.xlsx")
 
 print("Test 1: Gemini vs Gemini")
-final_similarities(gem_all, gem_all1)
-final_similarities(gem_all, gem_all2)
-final_similarities(gem_all1, gem_all2)
+average_similarities(df, "gemini")
 
 print("Test 2: DeepSeek vs DeepSeek")
-final_similarities(ds_all, ds_all1)
-final_similarities(ds_all, ds_all2)
-final_similarities(ds_all1, ds_all2)
+average_similarities(df, "deepseek")
 
 print("Test 3: Le Chat vs Le Chat")
-final_similarities(lc_all, lc_all1)
-final_similarities(lc_all, lc_all2)
-final_similarities(lc_all1, lc_all2)
+average_similarities(df, "lechat")
 
 print("Test 4: ChatGPT vs ChatGPT")
-final_similarities(gpt_all, gpt_all1)
-final_similarities(gpt_all, gpt_all2)
-final_similarities(gpt_all1, gpt_all2)
+average_similarities(df, "chatgpt")
 
 print("Test 5: Claude vs Claude")
-final_similarities(cl_all, cl_all1)
-final_similarities(cl_all, cl_all2)
-final_similarities(cl_all1, cl_all2)
+average_similarities(df, "claude")
+
+print("##############")
+average_similarities_different_models(df)
+"""
