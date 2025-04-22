@@ -63,37 +63,47 @@ def final_similarities(list_answers1, list_answers2):
     print(np.mean(np.array(bleu_list), axis=0))
 
 # Run code
-answers1 = load_answers("gemini_subsample1")
-answers2 = load_answers("gemini_subsample2")
-answers3 = load_answers("deepseek")
-answers3 = answers3[:(int(len(answers2)))]
-answers4 = load_answers("lechat")
-answers4 = answers4[:(int(len(answers2)))]
-
 gem_all = load_answers("gemini")
+gem_all1 = load_answers("gemini_rerun1")
+gem_all2 = load_answers("gemini_rerun2")
+
 ds_all = load_answers("deepseek")
+ds_all1 = load_answers("deepseek_rerun1")
+ds_all2 = load_answers("deepseek_rerun2")
+
 lc_all = load_answers("lechat")
+lc_all1 = load_answers("lechat_rerun1")
+lc_all2 = load_answers("lechat_rerun2")
+
+gpt_all = load_answers("chatgpt")
+gpt_all1 = load_answers("chatgpt_rerun1")
+gpt_all2 = load_answers("chatgpt_rerun2")
+
+cl_all = load_answers("claude")
+cl_all1 = load_answers("claude_rerun1")
+cl_all2 = load_answers("claude_rerun2")
 
 print("Test 1: Gemini vs Gemini")
-final_similarities(answers1, answers2)
+final_similarities(gem_all, gem_all1)
+final_similarities(gem_all, gem_all2)
+final_similarities(gem_all1, gem_all2)
 
-print("Test 2: Gemini vs DeepSeek")
-final_similarities(answers1, answers3)
+print("Test 2: DeepSeek vs DeepSeek")
+final_similarities(ds_all, ds_all1)
+final_similarities(ds_all, ds_all2)
+final_similarities(ds_all1, ds_all2)
 
-print("Test 3: Gemini vs Le Chat")
-final_similarities(answers1, answers4)
+print("Test 3: Le Chat vs Le Chat")
+final_similarities(lc_all, lc_all1)
+final_similarities(lc_all, lc_all2)
+final_similarities(lc_all1, lc_all2)
 
-print("Test 4: Le Chat vs DeepSeek")
-final_similarities(answers4, answers3)
+print("Test 4: ChatGPT vs ChatGPT")
+final_similarities(gpt_all, gpt_all1)
+final_similarities(gpt_all, gpt_all2)
+final_similarities(gpt_all1, gpt_all2)
 
-print("#########################")
-
-
-print("Test 5: Gemini all vs DeepSeek all")
-final_similarities(gem_all, ds_all)
-
-print("Test 6: Le Chat all vs DeepSeek all")
-final_similarities(lc_all, ds_all)
-
-print("Test 7: Le Chat all vs Gemini all")
-final_similarities(lc_all, gem_all)
+print("Test 5: Claude vs Claude")
+final_similarities(cl_all, cl_all1)
+final_similarities(cl_all, cl_all2)
+final_similarities(cl_all1, cl_all2)

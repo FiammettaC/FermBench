@@ -4,7 +4,7 @@ import json
 
 def load_data_jsonl(path):
     data = []
-    with open(path, 'r') as f:
+    with open(path, 'r', encoding='utf-8-sig') as f:
         for line in f:
             json_obj = json.loads(line)
             for key, value in json_obj[0].items():
@@ -26,9 +26,9 @@ def excel_to_jsonl(path, dest_path):
     for k, v in zip(df['key'], df['value']):
         d =  {}
         d[k] = v
-        with open(dest_path, 'a') as f:
+        with open(dest_path, 'a', encoding='utf-8-sig') as f:
             f.write(json.dumps([d]) + '\n')
 
 data_path = "../data/dataset_completion_lechat.xlsx"
-output_path = "../data/dataset_completion_lechat.jsonl"
+output_path = "../data/dataset_completion_lechat2.jsonl"
 excel_to_jsonl(data_path, output_path) 
