@@ -91,6 +91,21 @@ def average_similarities_different_models(df):
             print(round(avg_rerun_cs, 2), round(avg_rerun_f1, 2), round(avg_rerun_bleu, 2))
     return
 
+def average_words(df):
+    models = ["gemini", "deepseek", "lechat", "chatgpt", "claude"]
+    reruns =  ["", "_rerun1", "_rerun2"]
+    
+    for model in models:
+        print(model)
+        length = 0
+        c = 0
+        for run in reruns: 
+            print(run)
+            for sentence in df[f"value_{model}{run}"]:
+                c += 1
+                length += len(sentence.split())
+        print(f"Total for {model}: {round(length/c, 2)}")
+
 # Run code
 """
 df = load_data("data/dataset_merged_all_reruns.xlsx")

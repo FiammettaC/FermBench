@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 import matplotlib.colors as mcolors
 from sklearn.manifold import TSNE
 import umap
+import random
 
 def dimentionality_reduction(X, method="pca"):
     if method == "pca":
@@ -51,12 +52,12 @@ def plot_values(int1, int2):
     plt.grid(True)
     plt.xlabel('1st principal component')
     plt.ylabel('2nd principal component')
-    plt.title(f'Dimentionality reduction of {(int2-int1)} responses compared across models')
+    plt.title(f'Dimensionality reduction of {(int2-int1)} responses compared across models')
     plt.show()
 
 # Run code
 df = load_data('../data/dataset_merged_all.xlsx')
-df['color'] = [np.random.choice(list(mcolors.CSS4_COLORS.values())) for i in range(len(df))] 
+df['color'] = random.sample(list(mcolors.CSS4_COLORS.values()), len(df))
 
 #load sentence transformer to vectorize responses
 model_sim = SentenceTransformer('sentence-transformers/all-MiniLM-L6-v2')
