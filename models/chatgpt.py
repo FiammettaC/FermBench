@@ -16,7 +16,7 @@ def return_responses(df, dest_path):
         completion = {}
         # Make a simple request
         response = client.responses.create(
-        model="gpt-3.5-turbo",
+        model="gpt-4o",
         input=question)
         completion[question] = response.output_text
         # wait 20 seconds
@@ -25,6 +25,6 @@ def return_responses(df, dest_path):
             f.write(json.dumps([completion]) + '\n')
 
 # Run code
-#data_path = "data/dataset_curated.xlsx"
-#output_path = "data/dataset_completion_chatgpt_rerun2.jsonl"
-#return_responses(load_data(data_path), output_path)
+data_path = "data/dataset_curated.xlsx"
+output_path = "data/chatgpt/dataset_completion_chatgpt_4o.jsonl"
+return_responses(load_data(data_path), output_path)
