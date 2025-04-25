@@ -32,3 +32,7 @@ def excel_to_jsonl(path, dest_path):
 #data_path = "../data/dataset_completion_lechat.xlsx"
 #output_path = "../data/dataset_completion_lechat2.jsonl"
 #excel_to_jsonl(data_path, output_path) 
+
+
+#list_scores = load_data_jsonl("data/llm_as_judge_lechat_gemini.jsonl")
+#print(list_scores)

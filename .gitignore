@@ -174,5 +174,5 @@ cython_debug/
 .pypirc
 
 # API keys
-models/config_apis.py
 models/apis_config.py
+utils/apis_config.py

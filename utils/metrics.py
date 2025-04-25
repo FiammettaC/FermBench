@@ -7,6 +7,8 @@ import nltk
 import time
 import pandas as pd
 from data_loading import load_answers, load_data
+from mistralai import Mistral
+from apis_config import lechat_key
 
 def cosine_similarity(prediction, truth):
     model_sim = SentenceTransformer('sentence-transformers/all-MiniLM-L6-v2')
@@ -105,6 +107,38 @@ def average_words(df):
                 c += 1
                 length += len(sentence.split())
         print(f"Total for {model}: {round(length/c, 2)}")
+        
+        
+def llm_as_judge(df, model, dest_path):
+    client = Mistral(api_key=lechat_key())
+    for question, answer in zip(df['key'], df[f'value_{model}']):
+        prompt = f"Given the following question '{question}', \
+        please assess this answer '{answer}' based on these factors, \
+        on a 1-5 scale (5 being the highest) for each factor: \
+        factual accuracy, comprehensiveness, coherence, concision, \
+        readability, helpfulness, insightfulness and overall quality. \
+        Here is an explanations of the various factors.\
+        Factual accuracy aims to assess to what extent the answer is correct \
+        or if the model is hallucinating. \
+        Comprehensiveness measures the completeness of the response, \
+        whether it answers the question fully or if there is something missing.\
+        Coherence focuses on whether the response tackles the question and aligns with user intent. \
+        Concision evaluates whether the response is redundant or contains superfluous information. \
+        Readability provides an overview of how easy the response is to read and understand \
+        or if it is too complex, if the language is fluent, natural and grammatically correct. \
+        Helpfulness evaluates whether the answer is useful to the user/student. \
+        Insightfulness tackles the depth of the answer and if it offers any novel perspectives \
+        or goes beyond a superficial answer. \
+        Overall quality provides a general assessment of the response.\
+        Please return your answer as a dictionary, where the key is the factor the score is the value. \
+        Do not elaborate further."
+        completion = {}
+        response = client.chat.complete(
+        model = "mistral-large-latest",
+        messages = [{"role": "user", "content": prompt}])
+        completion[question] = response.choices[0].message.content
+        with open(dest_path, 'a') as f:
+            f.write(json.dumps([completion]) + '\n')
 
 # Run code
 """
@@ -128,3 +162,6 @@ average_similarities(df, "claude")
 print("##############")
 average_similarities_different_models(df)
 """
+
+df = load_data("data/dataset_merged_all_reruns.xlsx")
+llm_as_judge(df, "gemini", "data/llm_as_judge_lechat_gemini.jsonl")
