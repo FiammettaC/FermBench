@@ -7,8 +7,8 @@ import nltk
 import time
 import pandas as pd
 from data_loading import load_answers, load_data
-from mistralai import Mistral
-from apis_config import lechat_key
+#from mistralai import Mistral
+#from apis_config import lechat_key
 
 def cosine_similarity(prediction, truth):
     model_sim = SentenceTransformer('sentence-transformers/all-MiniLM-L6-v2')

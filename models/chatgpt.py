@@ -26,5 +26,5 @@ def return_responses(df, dest_path):
 
 # Run code
 #data_path = "data/dataset_curated.xlsx"
-#output_path = "data/dataset_completion_chatgpt_rerun2.jsonl"
+#output_path = "data/chatgpt/dataset_completion_chatgpt.jsonl"
 #return_responses(load_data(data_path), output_path)
