@@ -147,11 +147,12 @@ def llm_as_judge(df, model, dest_path):
             
 """
 def llm_as_judge(df, model, dest_path):    
-    model_id = "meta-llama/Llama-3.2-3B-Instruct"
+    model_id = "meta-llama/Llama-3.2-3B"
     pipeline = transformers.pipeline(
         "text-generation",
         model=model_id,
         #torch_dtype=torch.bfloat16,
+        model_kwargs={"torch_dtype": torch.bfloat16},
         device_map="auto",
     )
   
@@ -255,4 +256,5 @@ average_similarities_different_models(df)
 """
 
 df = load_data("data/dataset_merged_all_reruns.xlsx")
-llm_as_judge(df, "gemini", "data/llm_as_judge_test_chatgpt.jsonl")
+llm_as_judge(df, "gemini", "data/llm_as_judge_llama_chatgpt.jsonl")
+
