@@ -147,7 +147,7 @@ def llm_as_judge(df, model, dest_path):
             
 """
 def llm_as_judge(df, model, dest_path):    
-    model_id = "meta-llama/Llama-3.2-3B"
+    model_id = "meta-llama/Llama-3.2-1B-Instruct"
     pipeline = transformers.pipeline(
         "text-generation",
         model=model_id,
@@ -186,6 +186,8 @@ def llm_as_judge(df, model, dest_path):
                 messages,
                 max_new_tokens=256,
             )
+        
+        print(outputs)
         print(outputs[0]["generated_text"][-1])
         
         completion[question] = outputs[0]["generated_text"][-1]
@@ -201,12 +203,11 @@ def llm_as_judge_gemma(df, model, dest_path):
 )
   
     for question, answer in zip(df['key'], df[f'value_{model}']):
-        prompt = f"Given the following question '{question}', \
-        please assess this answer '{answer}' based on these factors, \
-        on a 1-5 scale (5 being the highest) for each factor: \
+        prompt = f"Task: given a specific question, please evaluate the given answer \
+        on a 1-5 scale (5 being the highest) for each of these factors: \
         factual accuracy, comprehensiveness, coherence, concision, \
         readability, helpfulness, insightfulness and overall quality. \
-        Here is an explanations of the various factors.\
+        An explanations of the various factors is provided below.\
         Factual accuracy aims to assess to what extent the answer is correct \
         or if the model is hallucinating. \
         Comprehensiveness measures the completeness of the response, \
@@ -220,7 +221,7 @@ def llm_as_judge_gemma(df, model, dest_path):
         or goes beyond a superficial answer. \
         Overall quality provides a general assessment of the response.\
         Please return your answer as a dictionary, where the key is the factor the score is the value. \
-        Do not elaborate further."
+        Do not elaborate further. The question asked is: {question}, and its relative answer is: {answer}."
         completion = {}
         #response = client.chat.complete(
         #model = "mistral-large-latest",
