@@ -15,6 +15,10 @@ import torch
 from apis_config import openai_api_key
 import time
 from openai import OpenAI
+import torchvision
+
+TF_ENABLE_ONEDNN_OPTS=0
+torchvision.disable_beta_transforms_warning()
  
 torch.cuda.empty_cache()
  
@@ -290,6 +294,93 @@ average_similarities(df, "claude")
 print("##############")
 average_similarities_different_models(df)
 """
- 
-df = load_data("data/dataset_merged_all_reruns.xlsx")
-llm_as_judge_gpt(df, "lechat_rerun2", "data/llm_as_judge_gpt_lechat_rerun2.jsonl")
+
+# Run LLM as judge GPT
+#df = load_data("data/dataset_merged_all_reruns.xlsx")
+#llm_as_judge_gpt(df, "lechat_rerun2", "data/llm_as_judge_gpt_lechat_rerun2.jsonl")
+
+from json_to_excel import load_data_jsonl
+import re
+
+models = ['chatgpt', 'claude', 'gemini', 'deepseek', 'lechat']
+runs = ['', '_rerun1', '_rerun2']
+
+#dict_chatgpt = {}
+#dict_claude = {}
+#dict_lechat = {}
+#dict_gemini = {}
+#dict_deepseek = {}
+
+for model in models:
+    dict = {}
+    fa = 0
+    comp = 0
+    coh = 0
+    conc = 0
+    read = 0
+    help = 0
+    ins = 0
+    oq = 0
+    for run in runs:
+        data = load_data_jsonl(f"data/llm_as_judge_gpt_{model}{run}.jsonl")
+        for idx, d in enumerate(data):
+            numbers = re.findall(r'\d+', d['value'])
+            fa += int(numbers[0])
+            comp += int(numbers[1])
+            coh += int(numbers[2])
+            conc += int(numbers[3])
+            read += int(numbers[4])
+            help += int(numbers[5])
+            ins += int(numbers[6])
+            oq += int(numbers[7])
+        
+        dict['factual_accuracy'] = round(fa/(len(data)*3), 2)
+        dict['comprehensiveness'] = round(comp/(len(data)*3), 2)
+        dict['coherence'] = round(coh/(len(data)*3), 2)
+        dict['concision'] = round(conc/(len(data)*3), 2)
+        dict['readability'] = round(read/(len(data)*3), 2)
+        dict['helpfulness'] = round(help/(len(data)*3), 2)
+        dict['insightfulness'] = round(ins/(len(data)*3), 2)
+        dict['overall_quality'] = round(oq/(len(data)*3), 2)  
+    print(model)
+    print(dict)  
+                
+                
+"""
+json_string = data[0]['value'].strip('```json python {}')
+print(json_string)
+
+
+#print(d)
+            #print(idx)
+            #try: 
+            #    json_string = d['value'].strip('```json python {}').lower()
+            #    print(json_string)
+                
+            #    python_dict = json.loads(json_string)
+            #except json.decoder.JSONDecodeError:
+            #    try:
+            #        print(d['value'].lower())
+            #        python_dict = json.loads(d['value'].lower())
+            #    except json.decoder.JSONDecodeError:
+            #        python_dict = json.loads(d['value'].strip('```python').lower())
+            
+            
+            #try:
+            #    print(python_dict['factual_accuracy'])
+            #    print(int(python_dict['factual_accuracy']))
+                fa += int(python_dict['factual_accuracy'])
+            except KeyError:
+                fa += int(python_dict['factual accuracy'])
+                
+            comp += python_dict['comprehensiveness']
+            coh += python_dict['coherence']
+            conc += python_dict['concision']
+            read += python_dict['readability']
+            help += python_dict['helpfulness']
+            ins += python_dict['insightfulness']
+            try:
+                oq += python_dict['overall_quality']
+            except KeyError:
+                oq += python_dict['overall quality']
+"""  
