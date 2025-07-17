@@ -10,12 +10,13 @@ from data_loading import load_answers, load_data
 #from mistralai import Mistral
 #from apis_config import lechat_key
 import transformers
-from transformers import pipeline, AutoProcessor #Llama4ForConditionalGeneration
-import torch
+from transformers import pipeline, AutoProcessor, BitsAndBytesConfig #Llama4ForConditionalGeneration
 from apis_config import openai_api_key
 import time
 from openai import OpenAI
 import torchvision
+from huggingface_hub import hf_hub_download
+
 
 TF_ENABLE_ONEDNN_OPTS=0
 torchvision.disable_beta_transforms_warning()
@@ -202,10 +203,15 @@ def llm_as_judge(df, model, dest_path):
  
 def llm_as_judge_gemma(df, model, dest_path):    
     pipe = pipeline(
-    "image-text-to-text",
+    "text-generation",
     model="google/gemma-3-4b-it",
-    #device="cuda",
-    #torch_dtype=torch.bfloat16
+    device_map="auto",
+    torch_dtype=torch.bfloat16,
+    model_kwargs={
+        "quantization_config": BitsAndBytesConfig(
+            load_in_4bit=True,
+            bnb_4bit_quant_type="nf4", 
+            bnb_4bit_compute_dtype=torch.bfloat16)}
 )
   
     for question, answer in zip(df['key'], df[f'value_{model}']):
@@ -229,11 +235,10 @@ def llm_as_judge_gemma(df, model, dest_path):
         Please return your answer as a dictionary, where the key is the factor the score is the value. \
         Do not elaborate further. The question asked is: {question}, and its relative answer is: {answer}."
         completion = {}
-        #response = client.chat.complete(
-        #model = "mistral-large-latest",
  
         messages = [{"role": "user", "content": prompt}]
-        outputs = pipe(text=messages, max_new_tokens=200)
+        with torch.no_grad():
+            outputs = pipe(messages, max_new_tokens=200)
         
         completion[question] = outputs[0]["generated_text"][-1]["content"]
         with open(dest_path, 'a') as f:
@@ -263,8 +268,6 @@ def llm_as_judge_gpt(df, model, dest_path):
         Please return your answer as a dictionary, where the key is the factor the score is the value. \
         Do not elaborate further. The question asked is: {question}, and its relative answer is: {answer}."
         completion = {}
-        #response = client.chat.complete(
-        #model = "mistral-large-latest",
         response = client.responses.create(
         model="gpt-4o",
         input=prompt)
@@ -296,9 +299,11 @@ average_similarities_different_models(df)
 """
 
 # Run LLM as judge GPT
-#df = load_data("data/dataset_merged_all_reruns.xlsx")
-#llm_as_judge_gpt(df, "lechat_rerun2", "data/llm_as_judge_gpt_lechat_rerun2.jsonl")
+df = load_data("data/dataset_merged_all_reruns.xlsx")
+m = "gemini"
+llm_as_judge_gemma(df, m, f"data/llm_as_judge_gemma_{m}.jsonl")
 
+"""
 from json_to_excel import load_data_jsonl
 import re
 
@@ -345,7 +350,8 @@ for model in models:
     print(model)
     print(dict)  
                 
-                
+"""
+          
 """
 json_string = data[0]['value'].strip('```json python {}')
 print(json_string)
