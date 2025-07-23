@@ -299,16 +299,17 @@ average_similarities_different_models(df)
 """
 
 # Run LLM as judge GPT
-df = load_data("data/dataset_merged_all_reruns.xlsx")
-m = "gemini"
-llm_as_judge_gemma(df, m, f"data/llm_as_judge_gemma_{m}.jsonl")
+#df = load_data("data/dataset_merged_all_reruns.xlsx")
+#m = "gemini"
+#llm_as_judge_gemma(df, m, f"data/llm_as_judge_gemma_{m}.jsonl")
 
-"""
+
 from json_to_excel import load_data_jsonl
 import re
 
-models = ['chatgpt', 'claude', 'gemini', 'deepseek', 'lechat']
+models = ['chatgpt', 'claude', 'gemini', 'deepseek', 'lechat'] #'chatgpt', 
 runs = ['', '_rerun1', '_rerun2']
+judge = 'gemma'
 
 #dict_chatgpt = {}
 #dict_claude = {}
@@ -326,19 +327,28 @@ for model in models:
     help = 0
     ins = 0
     oq = 0
+    missed = 0
     for run in runs:
-        data = load_data_jsonl(f"data/llm_as_judge_gpt_{model}{run}.jsonl")
+        data = load_data_jsonl(f"data/llm_as_judge_{judge}/llm_as_judge_{judge}_{model}{run}.jsonl")
         for idx, d in enumerate(data):
-            numbers = re.findall(r'\d+', d['value'])
-            fa += int(numbers[0])
-            comp += int(numbers[1])
-            coh += int(numbers[2])
-            conc += int(numbers[3])
-            read += int(numbers[4])
-            help += int(numbers[5])
-            ins += int(numbers[6])
-            oq += int(numbers[7])
-        
+            numbers = re.findall(r'[+-]?\d*\.?\d+', d['value'])
+            #print(numbers)
+            numbers = [round(float(n)) for n in numbers]
+            #print(numbers)
+            #print(len(numbers))
+            if len(numbers) == 8:
+                fa += int(numbers[0])
+                comp += int(numbers[1])
+                coh += int(numbers[2])
+                conc += int(numbers[3])
+                read += int(numbers[4])
+                help += int(numbers[5])
+                ins += int(numbers[6])
+                oq += int(numbers[7])
+            else:
+                #print(model, run, d)
+                missed +=1
+                continue
         dict['factual_accuracy'] = round(fa/(len(data)*3), 2)
         dict['comprehensiveness'] = round(comp/(len(data)*3), 2)
         dict['coherence'] = round(coh/(len(data)*3), 2)
@@ -348,9 +358,10 @@ for model in models:
         dict['insightfulness'] = round(ins/(len(data)*3), 2)
         dict['overall_quality'] = round(oq/(len(data)*3), 2)  
     print(model)
-    print(dict)  
+    print(dict) 
+    print(missed) 
                 
-"""
+
           
 """
 json_string = data[0]['value'].strip('```json python {}')
