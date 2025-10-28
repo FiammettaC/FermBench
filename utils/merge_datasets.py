@@ -19,7 +19,7 @@ def merge_responses(path, extention="jsonl"):
         answers1 = load_question_answers("gemini").rename(columns={"value": "value_gemini"}).drop_duplicates(subset='key', keep='first')
         answers2 = load_question_answers("deepseek").rename(columns={"value": "value_deepseek"}).drop_duplicates(subset='key', keep='first')
         answers3 = load_question_answers("lechat").rename(columns={"value": "value_lechat"}).drop_duplicates(subset='key', keep='first')
-        answers4 = load_question_answers("chagpt").rename(columns={"value": "value_chatgpt"}).drop_duplicates(subset='key', keep='first')
+        answers4 = load_question_answers("chatgpt").rename(columns={"value": "value_chatgpt"}).drop_duplicates(subset='key', keep='first')
         answers5 = load_question_answers("claude").rename(columns={"value": "value_claude"}).drop_duplicates(subset='key', keep='first')
 
     data_frames = [answers1, answers2, answers3, answers4, answers5]
@@ -43,7 +43,7 @@ def merge_responses_all(path):
                 print(model, rerun)
                 continue
     df_merged = reduce(lambda  left,right: pd.merge(left,right,on=['key']), answers)
-    df_merged.to_excel('data/dataset_merged_all_reruns2.xlsx', index=False)
+    df_merged.to_excel('data/dataset_merged_all_reruns.xlsx', index=False)
     return df_merged
     
 #merge_responses(path2, "jsonl")

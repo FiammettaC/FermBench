@@ -19,8 +19,8 @@ def create_sankey_plot():
     scoring_1 = 37 * 5 # Represents tasks in E1 for QTA
     scoring_2 = 15 * 5 # Represents tasks in E2 for QTA
     pairwise_completed = 86
-    scoring_completed = 330
-    open_questions_completed = 123
+    scoring_completed = 330 - 4*5
+    open_questions_completed = 123 - 4*2
 
     # Calculate total questions
     total_questions = (open_questions_1 * annotators) + \
@@ -117,7 +117,7 @@ def create_sankey_plot():
         # For simplicity, assuming distribution based on the total completed and annotators.
         # You'll need to refine these values based on actual distribution per annotator.
         {"source": "EA 1", "target": f"C QTB open-ended (N={open_questions_completed})", "value": open_questions_2},
-        {"source": "EA 2", "target": f"C QTB open-ended (N={open_questions_completed})", "value": open_questions_2},
+        {"source": "EA 2", "target": f"C QTB open-ended (N={open_questions_completed})", "value": 11*2},
         {"source": "EA 3", "target": f"C QTB open-ended (N={open_questions_completed})", "value": 11*2},
         {"source": "EA 4", "target": f"C QTB open-ended (N={open_questions_completed})", "value": 4*2},
         {"source": "EA 5", "target": f"C QTB open-ended (N={open_questions_completed})", "value": 4*2},
@@ -127,7 +127,7 @@ def create_sankey_plot():
         {"source": "EA 9", "target": f"C QTB open-ended (N={open_questions_completed})", "value": 7},
 
         {"source": "EA 1", "target": f"C QTA scoring (N={scoring_completed})", "value": scoring_2},
-        {"source": "EA 2", "target": f"C QTA scoring (N={scoring_completed})", "value": scoring_2},
+        {"source": "EA 2", "target": f"C QTA scoring (N={scoring_completed})", "value": 11*5},
         {"source": "EA 3", "target": f"C QTA scoring (N={scoring_completed})", "value": 11*5},
         {"source": "EA 4", "target": f"C QTA scoring (N={scoring_completed})", "value": 4*5},
         {"source": "EA 5", "target": f"C QTA scoring (N={scoring_completed})", "value": 4*5},
