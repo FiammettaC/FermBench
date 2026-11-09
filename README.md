@@ -13,7 +13,7 @@ This chatbot, which knowledge is extended with the collected curated answers, is
 The objective of this study is to provide a thorough investigation of which commercially available GenAI chatbot performs better on the topic of fermentation, aiding students and teachers to pick the best one when needing help on the topic.
 
 # Updates
-Check our updated results [here](https://github.com/FiammettaC/FermBench-ESCAPE).
+Check our updated data and results [here](https://github.com/FiammettaC/FermBench-ESCAPE).
 
 ## Cite this work
 If you would like to cite this work, please reference our paper: **FermBench: a new benchmark for measuring the capabilities of LLMs on fermentation knowledge**.
