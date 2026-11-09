@@ -14,3 +14,16 @@ The objective of this study is to provide a thorough investigation of which comm
 
 # Updates
 Check our updated results [here](https://github.com/FiammettaC/FermBench-ESCAPE).
+
+## Cite this work
+If you would like to cite this work, please reference our paper: **SPyCE: A structured and tailored series of Python courses for (bio)chemical engineers**.
+```bibtex
+@article{caccavale2026fermbench,
+  title={FermBench: a new benchmark for measuring the capabilities of LLMs on fermentation knowledge},
+  author={Caccavale, Fiammetta and Aouichaoui, Adem RN and Kr{\"u}hne, Ulrich and Gernaey, Krist V and Gargalo, Carina L},
+  journal={Computers and Education: Artificial Intelligence},
+  pages={100577},
+  year={2026},
+  publisher={Elsevier}
+}
+```
